@@ -1,0 +1,16 @@
+
+
+#include "get_next_line.h"
+
+char *get_next_line(int fd)
+{
+	static char *buffer;
+	size_t byte;
+	while (read(fd, buffer, count))
+	{
+		byte = read(fd, buffer, count);
+		printf("Buffer: %s", buffer);
+		return (buffer);
+	}
+     return (buffer);
+}
