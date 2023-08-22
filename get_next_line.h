@@ -3,8 +3,10 @@
 #include <stdio.h>
 #include <fcntl.h>
 #include <stdlib.h>
+#include "get_next_line_utils.h"
 
-#define BUFFER_SIZE 100
-
-char *get_next_line(int fd);
+char	*get_next_line(int fd);
+//Utils
+ssize_t	ft_strlen(char *s);
+char	ft_strjoin(char const *b1, char const *b2);
 
