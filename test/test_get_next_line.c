@@ -6,7 +6,7 @@
 /*   By: hmontoya <hmontoya@student.42barcel>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/22 16:00:39 by hmontoya          #+#    #+#             */
-/*   Updated: 2023/08/22 16:00:49 by hmontoya         ###   ########.fr       */
+/*   Updated: 2023/08/23 18:20:12 by hmontoya         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@ int main (int argc, char **argv)
 
 	fd = 0;
 	filename = argv[1];
+	line = NULL;
 	printf(":: Filename: %s\n", filename);
 	if (!filename)
 	{
