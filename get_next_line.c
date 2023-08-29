@@ -6,44 +6,67 @@
 /*   By: hmontoya <hmontoya@student.42barcel>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/22 16:00:21 by hmontoya          #+#    #+#             */
-/*   Updated: 2023/08/23 18:30:03 by hmontoya         ###   ########.fr       */
+/*   Updated: 2023/08/29 19:16:41 by hmontoya         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
 
-void memfree(char *s)
+void memfree(char **s)
 {
-	if(s)
-		free(s);
+	if (*s)
+	{
+		free(*s);
+		*s = NULL;
+	}
 } 
 
-char *read_line(int fd, char **buf, char *line)
+char *read_line(int fd, char **buffer)
 {
 	char	*chunk;
-	ssize_t bytes;
-	ssize_t line_size;
-
-	bytes = 0;
-	line_size = 0;
-	chunk = malloc(BUFFER_SIZE * sizeof(char));
+	char	*tmp;
+	ssize_t	*byte_read;
+	int		i;
+	chunk = (char *)malloc((BUFFER_SIZE + 1) * sizeof(char));
 	if (!chunk)
+	{
+		memfree(&buffer);
 		return (NULL);
-	while ((*buf)[line_size] && (*buf)[line_size] != '\n')
-			line_size++;
+	}
+	tmp = NULL;
+	byte_read = 1;
+	i = 0;
+	while ((byte_read = read(fd, chunk, BUFFER_SIZE)) > 0)
+	{
+		while (tmp[i] != '\n)
+			i++;
+		tmp = ft_bufjoin(&buffer, chunk);
+		if (!tmp)
+		{
+			memfree(&chunk);
+			return (NULL);
+		} 
+	}	
+	memfree(&chunk);
+	return (tmp);
+
+char *get_nline(char **buf)
+{
+	ssize_t	line_size;
+	char	*line;
+	ssize_t	buf_len;
+
+	line_size = 0;
+	line = NULL;
+	buf_len = ft_strlen(*buf);
+	while (line_size < buf_len  && (*buf)[line_size] != '\n')
+				line_size++;
 	if ((*buf)[line_size] == '\n')
 	{
 		line = ft_strcut(*buf,line_size);
 		*buf += line_size + 1;
 		return (line);
-	}
-	else
-	{
-		bytes = read(fd, chunk, BUFFER_SIZE);
-		if (bytes > 0)
-			*buf = ft_bufjoin(*buf, chunk);
-		memfree(chunk);
 	}
 	return (NULL);
 }
@@ -51,28 +74,19 @@ char *read_line(int fd, char **buf, char *line)
 char *get_next_line(int fd)
 {
 	static char *buffer;
-	char	*chunk;
 	char	*line;
 	ssize_t bytes;
 
-	if(fd != 3)
+	if (fd < 0)
 		return (NULL);
-	chunk = malloc(BUFFER_SIZE * sizeof(char));
 	line = NULL;
-	bytes = read(fd, chunk, BUFFER_SIZE);
 	if (!buffer)
-		buffer = malloc(BUFFER_SIZE * sizeof(char));
-	if (bytes > 0)
 	{
-		buffer = ft_bufjoin(buffer, chunk);
-		memfree(chunk);
+		buffer = (char *)malloc(BUFFER_SIZE * sizeof(char));
+		if (!buffer)
+			return (NULL);
 	}
-	else
-	{
-		memfree(buffer);
-		return (NULL);
-	}
-	while (!line && bytes > 0)
-		read_line(fd, &buffer, line);
+	buffer = read_line(fd, &buffer);
+	line = get_nline(&buffer);
 	return (line);
 }
