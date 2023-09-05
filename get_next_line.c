@@ -6,66 +6,63 @@
 /*   By: hmontoya <hmontoya@student.42barcel>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/22 16:00:21 by hmontoya          #+#    #+#             */
-/*   Updated: 2023/08/29 19:16:41 by hmontoya         ###   ########.fr       */
+/*   Updated: 2023/09/05 18:54:04 by hmontoya         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
 
-void memfree(char **s)
+char  *memfree(char **s)
 {
-	if (*s)
-	{
-		free(*s);
-		*s = NULL;
-	}
+	free(*s);
+	*s = NULL;
+	return (NULL);
 } 
 
 char *read_line(int fd, char **buffer)
 {
-	char	*chunk;
-	char	*tmp;
-	ssize_t	*byte_read;
-	int		i;
+	char		*chunk;
+	ssize_t		bytes_read;
+
+	bytes_read = 1;
+	if (!*buffer)
+		*buffer = (char *)malloc(1 * 1);
 	chunk = (char *)malloc((BUFFER_SIZE + 1) * sizeof(char));
 	if (!chunk)
+		return (memfree(buffer));
+	chunk[0] = '\0';
+	while (bytes_read > 0 && !ft_strchr(chunk, '\n'))
 	{
-		memfree(&buffer);
-		return (NULL);
-	}
-	tmp = NULL;
-	byte_read = 1;
-	i = 0;
-	while ((byte_read = read(fd, chunk, BUFFER_SIZE)) > 0)
-	{
-		while (tmp[i] != '\n)
-			i++;
-		tmp = ft_bufjoin(&buffer, chunk);
-		if (!tmp)
+		bytes_read = read(fd, chunk, BUFFER_SIZE);
+		if (bytes_read > 0)
 		{
-			memfree(&chunk);
-			return (NULL);
-		} 
-	}	
-	memfree(&chunk);
-	return (tmp);
-
+			chunk[bytes_read] = '\0';
+			*buffer = ft_bufjoin(buffer, chunk);
+		}
+	}
+	free(chunk);
+	if (bytes_read < 0)
+		return (memfree(buffer));
+	return (*buffer);
+}
 char *get_nline(char **buf)
 {
 	ssize_t	line_size;
+	char	*tmp;
 	char	*line;
-	ssize_t	buf_len;
 
 	line_size = 0;
 	line = NULL;
-	buf_len = ft_strlen(*buf);
-	while (line_size < buf_len  && (*buf)[line_size] != '\n')
+	tmp = NULL;
+	while ((*buf)[line_size] && (*buf)[line_size] != '\n')
 				line_size++;
-	if ((*buf)[line_size] == '\n')
+	if ((*buf)[line_size] == '\n' || (*buf)[line_size] == '\0' )
 	{
 		line = ft_strcut(*buf,line_size);
-		*buf += line_size + 1;
+		tmp = ft_strcut(*buf + line_size + 1, ft_strlen(*buf) - (line_size + 1));
+		memfree(buf);
+		*buf = tmp;
 		return (line);
 	}
 	return (NULL);
@@ -75,18 +72,19 @@ char *get_next_line(int fd)
 {
 	static char *buffer;
 	char	*line;
-	ssize_t bytes;
 
-	if (fd < 0)
+	if (fd < 0 || BUFFER_SIZE < 0 || read(fd, 0, 0) < 0)
 		return (NULL);
 	line = NULL;
+	buffer = (char *)malloc(BUFFER_SIZE * sizeof(char));
 	if (!buffer)
-	{
-		buffer = (char *)malloc(BUFFER_SIZE * sizeof(char));
-		if (!buffer)
-			return (NULL);
-	}
-	buffer = read_line(fd, &buffer);
+		return (NULL);
+	if (!buffer || (buffer && !ft_strchr(buffer, '\n'))) 
+		buffer = read_line(fd, &buffer);
+	if (!buffer)
+		return (NULL);
 	line = get_nline(&buffer);
+	if (!line)
+		return (memfree(&buffer));
 	return (line);
 }

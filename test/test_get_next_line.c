@@ -6,7 +6,7 @@
 /*   By: hmontoya <hmontoya@student.42barcel>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/22 16:00:39 by hmontoya          #+#    #+#             */
-/*   Updated: 2023/08/29 15:53:34 by hmontoya         ###   ########.fr       */
+/*   Updated: 2023/09/05 18:41:47 by hmontoya         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@ int main (int argc, char **argv)
 	char *line;
 	int fd;
 	int i;
+	int EOF1;
 
 	fd = 0;
 	filename = argv[1];
@@ -36,8 +37,12 @@ int main (int argc, char **argv)
 		printf(":: Error: the file could not be opened. (%s)", filename);
 		exit(2);
 	}
-	while ((line = get_next_line(fd)) != NULL)
+	EOF1 = 0;
+	while (!EOF1)
 	{
+		line = get_next_line(fd);
+		if (!line)
+			EOF1 = 1;
 		printf(">> Line %i: %s\n\n", i++, line);
 	}
 	memfree(&line);
