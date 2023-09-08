@@ -6,7 +6,7 @@
 /*   By: hmontoya <hmontoya@student.42barcel>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/20 16:06:54 by hmontoya          #+#    #+#             */
-/*   Updated: 2023/09/07 19:22:37 by hmontoya         ###   ########.fr       */
+/*   Updated: 2023/09/08 20:04:53 by hmontoya         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,21 +23,39 @@ ssize_t ft_strlen(char *s)
 	return (i);
 }
 
+void *ft_calloc(ssize_t count, ssize_t size)
+{
+    void    *ptr;
+	ssize_t          i;
+    unsigned char   *b;
+
+    ptr = (void *)malloc(count * size);
+    if (!ptr)
+        return (0);
+    i = 0;
+    b = (unsigned char *)ptr;
+    while (i < count * size)
+    {
+        b[i] = 0;
+        i++;
+    }
+    ptr = (void *) b;
+    return ((void *)ptr);
+}
+
 char    *ft_strchr(char *s, int c)
 {
     int             i;
 
     i = 0;
-	if (!s[0])
+	if (!s || !(*s))
 		return (NULL);
-    while (s[i])
+    while (*(s + i))
     {
-        if (s[i] && s[i] == c)
+        if (*(s + i) == c)
             return (s + i);
         i++;
     }
-    if (c == '\0')
-        return (s + i);
     return (NULL);
 }
 
@@ -47,15 +65,14 @@ char *ft_strcut(char *s, ssize_t size)
 	ssize_t i;
 
 	i = 0;
-	dup = malloc((size + 1) * sizeof(char));
+	dup = ft_calloc((size + 1),  sizeof(char));
 	if (!dup)
-		return (memfree(&s));
-	while (i <= size )
+		return (NULL);
+	while (i < size )
 	{
 		dup[i] = (char)s[i];
 		i++;
 	}
-	dup[i] = '\0';
 	return (dup);
 }
 
@@ -66,7 +83,7 @@ char *ft_bufjoin(char *b1, char *b2)
 	ssize_t j;
 
 	if ((!b1 && !b2))
-        return (memfree(&b1));
+        return (NULL);
 
 	i = -1;
 	j = -1;
@@ -77,7 +94,7 @@ char *ft_bufjoin(char *b1, char *b2)
 		*(newstr + i) = b1[i];	
 	while (b2[++j])
 		*(newstr + i + j) = b2[j];
-	*(newstr + i + j) = '\0';
+	newstr[i + j] = '\0';
 	memfree(&b1);
 	return (newstr);
 }

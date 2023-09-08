@@ -6,7 +6,7 @@
 /*   By: hmontoya <hmontoya@student.42barcel>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/22 16:00:21 by hmontoya          #+#    #+#             */
-/*   Updated: 2023/09/08 20:29:58 by hmontoya         ###   ########.fr       */
+/*   Updated: 2023/09/08 19:35:19 by hmontoya         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,17 +27,17 @@ char *read_line(int fd, char *buffer)
 	ssize_t		bytes_read;
 
 	bytes_read = 1;
-	chunk = (char *)ft_calloc((BUFFER_SIZE + 1), sizeof(char));
+	chunk = (char *)malloc((BUFFER_SIZE + 1) * sizeof(char));
 	if (!chunk)
-		return (NULL);
+		return (memfree(&buffer));
 	while (bytes_read > 0 && !ft_strchr(chunk, '\n'))
 	{
 		bytes_read = read(fd, chunk, BUFFER_SIZE);
-		if (bytes_read < 0 && !memfree(&buffer)) 
-			return (memfree(&chunk));
+		if (bytes_read < 0 && memfree(&chunk)) 
+			return (memfree(&buffer));
+		chunk[bytes_read] = '\0';
 		if (bytes_read > 0)
 		{
-			chunk[bytes_read] = '\0';
 			buffer = ft_bufjoin(buffer, chunk);
 			if (!buffer)
 				return (memfree(&chunk));
@@ -67,7 +67,7 @@ char *get_nline(char **buf)
 		line = ft_strcut(*buf,ln_size + 1);
 		if (!line)
 			return (memfree(buf));
-		tmp = ft_strcut(*buf + ln_size + 1, ft_strlen(*buf) - (ln_size));
+		tmp = ft_strcut(*buf + ln_size + 1, ft_strlen(*buf) - (ln_size + 1));
 		if (!tmp)
 			return (memfree(buf));
 		memfree(buf);
@@ -95,7 +95,7 @@ char *get_next_line(int fd)
 	if (!ft_strchr(buffer, '\n')) 
 		buffer = read_line(fd, buffer);
 	if (!buffer)
-		return (memfree(&buffer));
+		return (NULL);
 	line = get_nline(&buffer);
 	if (!line)
 		return (memfree(&buffer));

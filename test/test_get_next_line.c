@@ -6,7 +6,7 @@
 /*   By: hmontoya <hmontoya@student.42barcel>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/22 16:00:39 by hmontoya          #+#    #+#             */
-/*   Updated: 2023/09/06 20:09:45 by hmontoya         ###   ########.fr       */
+/*   Updated: 2023/09/08 16:58:25 by hmontoya         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,7 @@ int main (int argc, char **argv)
 		exit(2);
 	}
 	EOF1 = 0;
+	i = 0;
 	while (EOF1 < 1)
 	{
 		line = get_next_line(fd);

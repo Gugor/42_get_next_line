@@ -13,6 +13,7 @@ char	*read_line(int fd, char *buffer);
 char	*get_nline(char **buf);
 //Utils
 ssize_t	ft_strlen(char *s);
+void	*ft_calloc(ssize_t count, ssize_t size);
 char	*ft_bufjoin(char *b1, char *b2);
 char	*ft_strcut(char *s, ssize_t size);
 char	*ft_strchr(char *s, int c);
