@@ -6,29 +6,14 @@
 /*   By: hmontoya <hmontoya@student.42barcel>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/22 16:00:21 by hmontoya          #+#    #+#             */
-/*   Updated: 2023/09/09 18:53:36 by hmontoya         ###   ########.fr       */
+/*   Updated: 2023/09/09 19:28:00 by hmontoya         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
 
 char	*memfree(char **s)
 {
-	/*ssize_t i;
-	ssize_t size;
-
-	i = 0;
-	size = 0;
-	while (*(s + size))
-		size++;
-	while (i < size)
-	{
-		if (*(s + i))
-			free(s[i]);
-		s[i] = NULL;
-		i++;
-	}
-*/	
 	if (s && *s)
 		free(*s);
 	*s = NULL;
@@ -91,25 +76,24 @@ char	*get_nline(char **buf)
 
 char	*get_next_line(int fd)
 {
-	static char	*buffer[100];
+	static char	*buffer[OPEN_MAX];
 	char		*line;
 
-
 	if (fd < 0 || BUFFER_SIZE < 0 || read(fd, 0, 0) < 0)
-		return (memfree(buffer));
+		return (memfree(&buffer[fd]));
 	line = NULL;
 	if (!buffer[fd])
 	{
-		buffer[fd] = (char *)ft_calloc(1,  sizeof(char));
+		buffer[fd] = (char *)ft_calloc(1, sizeof(char));
 		if (!buffer[fd])
 			return (memfree(buffer));
 	}
 	if (!ft_strchr(buffer[fd], '\n'))
 		buffer[fd] = read_line(fd, buffer[fd]);
-	if (!buffer[fd] || !buffer[fd][0] )
+	if (!buffer[fd] || !buffer[fd][0])
 		return (memfree(buffer));
 	line = get_nline(&buffer[fd]);
-	if (!line )
+	if (!line)
 		return (memfree(buffer));
 	return (line);
 }

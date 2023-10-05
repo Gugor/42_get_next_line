@@ -6,11 +6,11 @@
 /*   By: hmontoya <hmontoya@student.42barcel>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/20 16:06:54 by hmontoya          #+#    #+#             */
-/*   Updated: 2023/09/09 15:35:48 by hmontoya         ###   ########.fr       */
+/*   Updated: 2023/09/09 19:24:04 by hmontoya         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
 #include <string.h>
 
 ssize_t	ft_strlen(char *s)

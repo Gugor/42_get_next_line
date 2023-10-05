@@ -6,16 +6,17 @@
 /*   By: hmontoya <hmontoya@student.42barcel>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/09 15:36:58 by hmontoya          #+#    #+#             */
-/*   Updated: 2023/09/09 15:40:45 by hmontoya         ###   ########.fr       */
+/*   Updated: 2023/09/09 19:22:40 by hmontoya         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef GET_NEXT_LINE_H
-# define GET_NEXT_LINE_H
+#ifndef GET_NEXT_LINE_BONUS_H
+# define GET_NEXT_LINE_BONUS_H
 # include <unistd.h>
 # include <stdio.h>
 # include <fcntl.h>
 # include <stdlib.h>
+# include <limits.h>
 # ifndef BUFFER_SIZE
 #  define BUFFER_SIZE 42
 # endif
